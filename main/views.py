@@ -42,7 +42,14 @@ def add_link(request):
         # remove duplicates
         tags = list(set(tags))
         for tag in tags:
-            new_tag = Tag(name=tag)
-            new_tag.save()
-            link.tags.add(new_tag)
+            # check whether a tag with this name already exists
+            if Tag.objects.filter(name=tag).count() > 0:
+                # user the preexisting tags
+                new_tag = Tag.objects.get(name=tag)
+                link.tags.add(new_tag)
+            else:
+                # otherwise create the tag
+                new_tag = Tag(name=tag)
+                new_tag.save()
+                link.tags.add(new_tag)
     return redirect(index)
