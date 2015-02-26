@@ -25,9 +25,23 @@ def tag(request, tag_name):
     return render_to_response('main/index.html', {'links': links, 'tag_name': '#' + tag_name}, context)
 
 def add_link(request):
+    import pdb; pdb.set_trace()
     context = RequestContext(request)
     if request.method == 'POST':
         url = request.POST.get("url", "")
         tags = request.POST.get("tags", "")
         title = request.POST.get("title", "")
+
+        # create the link object
+        link = Link.objects.create(title=title, url=url)
+        link.save()
+
+        # add tags
+        tags = tags.split()
+        # remove duplicates
+        tags = list(set(tags))
+        for tag in tags:
+            new_tag = Tag(name=tag)
+            new_tag.save()
+            link.tags.add(new_tag)
     return redirect(index)
