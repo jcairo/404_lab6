@@ -16,6 +16,7 @@ def index(request):
 def tags(request):
     context = RequestContext(request)
     tags = Tag.objects.all()
+    # tags = Tag.objects.values_list('name').distinct()
     return render_to_response('main/tags.html', {'tags': tags}, context)
 
 def tag(request, tag_name):
